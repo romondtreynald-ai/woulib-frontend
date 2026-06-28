@@ -1,3 +1,6 @@
+import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import L from 'leaflet';
+import 'leaflet/dist/leaflet.css';
 import React, { useState, useEffect } from 'react';
 
 const API = 'https://woulib-backend-production.up.railway.app';
@@ -208,7 +211,7 @@ function RiderApp({ token, showToast }) {
 
   return (
     <div>
-      <div style={{ background: 'linear-gradient(135deg,#e8f0e8,#d4e6d4)', height: 160 }} />
+      <MapContainer center={[18.5392, -72.3288]} zoom={13} style={{ height: 200, width: '100%' }}><TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" /></MapContainer>
       <div style={{ padding: 16 }}>
         <p style={sectionLabel}>Kibò ou prale?</p>
         <div style={inputRow}>
