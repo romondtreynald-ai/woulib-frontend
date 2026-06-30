@@ -80,6 +80,9 @@ function TopBar({ user, onLogout }) {
 function AuthScreen({ onAuth }) {
   const [mode, setMode] = useState('login'); // 'login' | 'register'
   const [role, setRole] = useState('rider');
+  const [cinNumber, setCinNumber] = useState('');
+  const [licensePlate, setLicensePlate] = useState('');
+  const [vehicleModel, setVehicleModel] = useState('');
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('');
@@ -95,7 +98,7 @@ function AuthScreen({ onAuth }) {
     setLoading(true);
     try {
       const url = mode === 'login' ? '/api/auth/login' : '/api/auth/register';
-      const body = mode === 'login' ? { phone, password } : { name, phone, password, role };
+      const body = mode === 'login' ? { phone, password } : { name, phone, password, role, cinNumber, licensePlate, vehicleModel };
       const res = await fetch(API + url, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -139,7 +142,19 @@ function AuthScreen({ onAuth }) {
 
             <label style={labelStyle}>Non konplè</label>
             <input value={name} onChange={e => setName(e.target.value)} placeholder="Jan Pyè" style={inputStyle} />
-          </>
+
+            {role === 'driver' && (
+              <>
+                <label style={labelStyle}>Nimewo CIN</label>
+                <input value={cinNumber} onChange={e => setCinNumber(e.target.value)} placeholder="001-234567-8" style={inputStyle} />
+
+                <label style={labelStyle}>Plak machin</label>
+                <input value={licensePlate} onChange={e => setLicensePlate(e.target.value)} placeholder="AB-1234" style={inputStyle} />
+
+                <label style={labelStyle}>Mak ak modèl machin</label>
+                <input value={vehicleModel} onChange={e => setVehicleModel(e.target.value)} placeholder="Toyota Corolla 2018" style={inputStyle} />
+              </>
+            )}          </>
         )}
 
         <label style={labelStyle}>Nimewo telefòn</label>
