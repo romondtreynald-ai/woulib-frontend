@@ -183,8 +183,34 @@ function RiderApp({ token, showToast }) {
   const [booking, setBooking] = useState(false);
   const [activeRide, setActiveRide] = useState(null);
 
-  const fares = { WouGo: 850, WouPlus: 1400, WouXL: 2100 };
+  const [pickupCoords, setPickupCoords] = useState([18.5392, -72.3288]);
+  const [destCoords, setDestCoords] = useState(null);
+  const [distance, setDistance] = useState(0);
 
+  useEffect(() => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (pos) => setPickupCoords([pos.coords.latitude, pos.coords.longitude]),
+        () => {}
+      );
+    }
+  }, []);
+
+  function calcDistance(c1, c2) {
+    const R = 6371;
+    const dLat = (c2[0]-c1[0]) * Math.PI/180;
+    const dLon = (c2[1]-c1[1]) * Math.PI/180;
+    const a = Math.sin(dLat/2)**2 + Math.cos(c1[0]*Math.PI/180)*Math.cos(c2[0]*Math.PI/180)*Math.sin(dLon/2)**2;
+    return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+  }
+
+  const baseFares = { WouGo: 150, WouPlus: 250, WouXL: 350 };
+  const perKm = { WouGo: 75, WouPlus: 120, WouXL: 180 };
+  const fares = {
+    WouGo: Math.round(baseFares.WouGo + perKm.WouGo * distance),
+    WouPlus: Math.round(baseFares.WouPlus + perKm.WouPlus * distance),
+    WouXL: Math.round(baseFares.WouXL + perKm.WouXL * distance)
+  };
   async function bookRide() {
     if (!destination.trim()) { showToast('Antre yon destinasyon'); return; }
     setBooking(true);
